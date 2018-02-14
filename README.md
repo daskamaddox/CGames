@@ -1,8 +1,8 @@
 # CGames
-
-[![Travis branch](https://img.shields.io/travis/rust-lang/rust/master.svg)](https://travis-ci.org/briankarUB/CGames)
-[![Coveralls github](https://img.shields.io/coveralls/github/jekyll/jekyll.svg)](https://coveralls.io/github/briankarUB/CGames)
+[![Travis](https://img.shields.io/travis/briankarUB/CGames.svg)](https://travis-ci.org/briankarUB/CGames)
+[![Coveralls](https://img.shields.io/coveralls/github/briankarUB/CGames.svg)](https://coveralls.io/github/briankarUB/CGames)
 [![Join the chat at https://gitter.im/CGames_CSE442/Lobby](https://badges.gitter.im/CGames_CSE442/Lobby.svg)](https://gitter.im/CGames_CSE442/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 CSE 442 project for Spring 2018.
 
 ## Summary
