@@ -3,6 +3,13 @@
 [![Join the chat at https://gitter.im/CGames_CSE442/Lobby](https://badges.gitter.im/CGames_CSE442/Lobby.svg)](https://gitter.im/CGames_CSE442/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 CSE 442 project for Spring 2018.
 
+### Testing
+```
+$ git clone https://github.com/briankarUB/CGames.git
+$ cd CGames
+$ python setup.py validate
+```
+
 **User Story:** I want a way to learn a programming language that is fun and feels like playing a game
 
 **Project Description:**
