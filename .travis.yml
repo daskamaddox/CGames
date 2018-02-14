@@ -5,4 +5,7 @@ python:
 script:
   - python setup.py validate
 
+after_success:
+  - coveralls
+
 cache: pip
