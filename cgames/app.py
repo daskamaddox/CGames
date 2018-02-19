@@ -1,6 +1,12 @@
 from flask import Flask, redirect, url_for, session, render_template
-from cgames import config
-from cgames import fo
+try:
+    from cgames.fo import OAuth
+except Exception as e:
+    from fo import OAuth
+try:
+    import cgames.config as config
+except Exception as e:
+    import config
 '''
     connecting to google OAuth
     source tutorial: https://pythonspot.com/login-to-flask-app-with-google
@@ -15,14 +21,14 @@ DEBUG = True
 app = Flask(__name__)
 app.debug = DEBUG
 app.secret_key = SECRET_KEY
-oauth = fo.OAuth()
+oauth = OAuth()
 
-base_url = 'https://www.google.com/accounts/',
-authorize_url = 'https://accounts.google.com/o/oauth2/auth',
+base_url = 'https://www.google.com/accounts/'
+authorize_url = 'https://accounts.google.com/o/oauth2/auth'
 request_token = {'scope': 'https://www.googleapis.com/auth/userinfo.email',
-                 'response_type': 'code'},
-access_token_url = 'https://accounts.google.com/o/oauth2/token',
-access_token_params = {'grant_type': 'authorization_code'},
+                 'response_type': 'code'}
+access_token_url = 'https://accounts.google.com/o/oauth2/token'
+access_token_params = {'grant_type': 'authorization_code'}
 
 google = oauth.remote_app('google',
                           base_url=base_url,
@@ -83,20 +89,19 @@ def signin():
             session.pop('access_token', None)
             return redirect(url_for('login'))
         return res.read()
-
     user = (res.read())
     n = []
     ulist = user.decode('utf-8').split(',')
     for item in ulist:
         new = item.split(':', 1)
         for i in range(len(new)):
-            n.append(new[i][new[i].find('"')+1:new[i].find('"',
-                     new[i].find('"')+1)])
-
+            n.append(new[i][new[i].find('"')+1:
+                     new[i].find('"', new[i].find('"')+1)])
     d = {}
 
     for i in range(0, len(n), 2):
         d[n[i]] = n[i+1]
+
     return render_template('profile.html', vname=d['name'], photo=d['picture'])
 
 

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 import httplib2
 from functools import wraps
 from urllib.parse import urljoin
@@ -6,6 +7,7 @@ from flask import request, session, json, redirect
 from werkzeug import url_decode, url_encode, url_quote, \
      parse_options_header, Headers
 import oauth2
+
 """
     flask_oauth
     ~~~~~~~~~~~
@@ -21,6 +23,7 @@ import oauth2
     the only change is to use urllib.parse instead of urlparse to import
     urljoin
 '''
+
 
 _etree = None
 
@@ -298,10 +301,9 @@ class OAuthRemoteApp(object):
     def generate_request_token(self, callback=None):
         if callback is not None:
             callback = urljoin(request.url, callback)
-            expand = self.expand_url(self.request_token_url)
-        resp, content = self._client.request_new_token(expand, callback,
-                                                       self.request_token_params
-                                                       )
+        resp, content = self._client.request_new_token(
+            self.expand_url(self.request_token_url), callback,
+                self.request_token_params)
         if not self.status_okay(resp):
             raise OAuthException('Failed to generate request token',
                                  type='token_generation_failed')
@@ -314,14 +316,14 @@ class OAuthRemoteApp(object):
         return tup
 
     def get_request_token(self, token=None):
-        assert self.tokengetter_func is not None, 'missingtokengetter function'
+        assert self.tokengetter_func is not None, 'missing tokengeter function'
         # Don't pass the token if the token is None to support old
         # tokengetter functions.
         rv = self.tokengetter_func(*(token and (token,) or ()))
         if rv is None:
             rv = session.get(self.name + '_oauthtok')
             if rv is None:
-                raise OAuthException('No tokenavailable', type='token_missing')
+                raise OAuthException('No token avalable', type='token_missing')
         return oauth2.Token(*rv)
 
     def free_request_token(self):
@@ -393,19 +395,19 @@ class OAuthRemoteApp(object):
         this method is forwarded as first argument to the handling view
         function.
         """
-        remote_arg = {
+        remote_args = {
             'code':             request.args.get('code'),
             'client_id':        self.consumer_key,
             'client_secret':    self.consumer_secret,
             'redirect_uri':     session.get(self.name + '_oauthredir')
         }
-        remote_arg.update(self.access_token_params)
+        remote_args.update(self.access_token_params)
         if self.access_token_method == 'POST':
             resp, content = self._client.request(self.expand_url(self.access_token_url),
                                                  self.access_token_method,
-                                                 url_encode(remote_arg))
+                                                 url_encode(remote_args))
         elif self.access_token_method == 'GET':
-            url = add_query(self.expand_url(self.access_token_url), remote_arg)
+            url = add_query(self.expand_url(self.access_token_url), remote_args)
             resp, content = self._client.request(url, self.access_token_method)
         else:
             raise OAuthException('Unsupported access_token_method: ' +
