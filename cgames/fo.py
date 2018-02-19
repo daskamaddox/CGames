@@ -393,19 +393,19 @@ class OAuthRemoteApp(object):
         this method is forwarded as first argument to the handling view
         function.
         """
-        remote_args = {
+        remote_arg = {
             'code':             request.args.get('code'),
             'client_id':        self.consumer_key,
             'client_secret':    self.consumer_secret,
             'redirect_uri':     session.get(self.name + '_oauthredir')
         }
-        remote_args.update(self.access_token_params)
+        remote_arg.update(self.access_token_params)
         if self.access_token_method == 'POST':
             resp, content = self._client.request(self.expand_url(self.access_token_url),
                                                  self.access_token_method,
-                                                 url_encode(remote_args))
+                                                 url_encode(remote_arg))
         elif self.access_token_method == 'GET':
-            url = add_query(self.expand_url(self.access_token_url), remote_args)
+            url = add_query(self.expand_url(self.access_token_url), remote_arg)
             resp, content = self._client.request(url, self.access_token_method)
         else:
             raise OAuthException('Unsupported access_token_method: ' +
