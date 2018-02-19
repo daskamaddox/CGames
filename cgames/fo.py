@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+import httplib2
+from functools import wraps
+from urllib.parse import urljoin
+from flask import request, session, json, redirect
+from werkzeug import url_decode, url_encode, url_quote, \
+     parse_options_header, Headers
+import oauth2
 """
     flask_oauth
     ~~~~~~~~~~~
@@ -11,18 +18,13 @@
 
 '''
     this is an edited version of flask_oauth to work with python 3.5.
-    the only change is to use urllib.parse instead of urlparse to import urljoin
+    the only change is to use urllib.parse instead of urlparse to import
+    urljoin
 '''
-import httplib2
-from functools import wraps
-from urllib.parse import urljoin
-from flask import request, session, json, redirect, Response
-from werkzeug import url_decode, url_encode, url_quote, \
-     parse_options_header, Headers
-import oauth2
-
 
 _etree = None
+
+
 def get_etree():
     """Return an elementtree implementation.  Prefers lxml"""
     global _etree
@@ -268,9 +270,9 @@ class OAuthRemoteApp(object):
         :param token: an optional token to pass to tokengetter. Use this if you
                       want to support sending requests using multiple tokens.
                       If you set this to anything not None, `tokengetter_func`
-                      will receive the given token as an argument, in which case
-                      the tokengetter should return the `(token, secret)` tuple
-                      for the given token.
+                      will receive the given token as an argument, in which
+                      case the tokengetter should return the `(token, secret)`
+                      tuple for the given token.
         :return: an :class:`OAuthResponse` object.
         """
         headers = dict(headers or {})
@@ -296,9 +298,10 @@ class OAuthRemoteApp(object):
     def generate_request_token(self, callback=None):
         if callback is not None:
             callback = urljoin(request.url, callback)
-        resp, content = self._client.request_new_token(
-            self.expand_url(self.request_token_url), callback,
-                self.request_token_params)
+            expand = self.expand_url(self.request_token_url)
+        resp, content = self._client.request_new_token(expand, callback,
+                                                       self.request_token_params
+                                                       )
         if not self.status_okay(resp):
             raise OAuthException('Failed to generate request token',
                                  type='token_generation_failed')
@@ -311,14 +314,14 @@ class OAuthRemoteApp(object):
         return tup
 
     def get_request_token(self, token=None):
-        assert self.tokengetter_func is not None, 'missing tokengetter function'
+        assert self.tokengetter_func is not None, 'missingtokengetter function'
         # Don't pass the token if the token is None to support old
         # tokengetter functions.
         rv = self.tokengetter_func(*(token and (token,) or ()))
         if rv is None:
             rv = session.get(self.name + '_oauthtok')
             if rv is None:
-                raise OAuthException('No token available', type='token_missing')
+                raise OAuthException('No tokenavailable', type='token_missing')
         return oauth2.Token(*rv)
 
     def free_request_token(self):
@@ -328,9 +331,10 @@ class OAuthRemoteApp(object):
     def authorize(self, callback=None):
         """Returns a redirect response to the remote authorization URL with
         the signed callback given.  The callback must be `None` in which
-        case the application will most likely switch to PIN based authentication
-        or use a remotely stored callback URL.  Alternatively it's an URL
-        on the system that has to be decorated as :meth:`authorized_handler`.
+        case the application will most likely switch to PIN based
+        authentication or use a remotely stored callback URL.  Alternatively
+        it's an URL on the system that has to be decorated as
+        :meth:`authorized_handler`.
         """
         if self.request_token_url:
             token = self.generate_request_token(callback)[0]
