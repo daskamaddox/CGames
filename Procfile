@@ -1,1 +1,1 @@
-web: sh ./cgames/run.sh
+web: sh ./run.sh
