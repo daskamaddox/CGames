@@ -1,1 +1,1 @@
-web: gunicorn app:cgames/app.py
+web: gunicorn app:app
