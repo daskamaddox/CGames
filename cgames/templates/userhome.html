@@ -14,27 +14,35 @@
   <nav class="light-blue lighten-1" role="navigation">
     <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Home</a>
       <ul class="right hide-on-med-and-down">
-        <li><a href="/login"> Switch User </a></li>
-        <li><a href="/"> Logout </a></li>
-        <li><a href="/profile">Profile
-          <style>
-          img {
-            border-radius: 50%
-          }
-          </style>
-          <img src= {{ photo}} width="30" alt="Avatar" align='center'></img></a>
+        <ul id="dropdown1" class="dropdown-content">
+          <li><a href="/profile">Profile</a></li>
+          <li><a href="/Assignments">Assignments</a></li>
+          <li class="divider"></li>
+          <li><a href="/logged_in">Switch User</a></li>
+          <li><a href="/">Logout</a></li>
+        </ul>
+        <nav>
+          <div class="nav-wrapper">
+            <ul class="right hide-on-med-and-down">
+              <li>
+                <a class="dropdown-button blue " href="#!" data-activates="dropdown1">{{ vname }}<i class="material-icons right">arrow_drop_down</i></a></li>
+            </ul>
+          </div>
+        </nav>
 
-        </li>
       </ul>
       <ul id="nav-mobile" class="side-nav">
-        <li><a href="/profile">Profile
-          <style>
-          img {
-            border-radius: 50%
-          }
-          </style>
-          <img src= {{ photo}} width="30" alt="Avatar" align='center'></img></a>
+        <li><a href="/profile">Profile</a></li>
+        <li class="collection-item avatar">
+          <img src="images/yuna.jpg" alt="" class="circle">
+          <span class="title">Title</span>
+          <p>First Line <br>
+            Second Line
+          </p>
+          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
         </li>
+        <li><a href="/Assignments"> Assignments </a></li>
+        <li class="divider"></li>
         <li><a href="/login"> Switch User </a></li>
         <li><a href="/"> Logout </a></li>
       </ul>
@@ -44,15 +52,15 @@
   <div class="section no-pad-bot" id="index-banner">
     <div class="container">
       <br><br>
-      <h1 class="header center orange-text">Welcome {{ vname }}</h1>
+      <h1 class="header center orange-text">Welcome Back {{ vname }}</h1>
       <div class="row center">
-        <h5 class="header col s12 light">A place to learn how to code Python that feels like playing a game</h5>
+        <h5 class="header col s12 light">Start A New Lesson Or Finish Where You Left Off</h5>
       </div>
       <div class="row center">
-        <a id="download-button" href="/lessons" class="btn-large waves-effect waves-light grey lighten-3 grey-text text-darken-1">Get Started</a>
+        <a href="/Assignments" class="btn waves-effect waves-light blue darken-2 z-depth-4">Start New Lesson</a>
+        <a href="/Assignments" class="btn waves-effect waves-light blue darken-2 z-depth-4">Continue Lesson</a>
       </div>
       <br><br>
-
     </div>
   </div>
 
@@ -107,6 +115,22 @@
             </div>
           </div>
         </div>
+        <div class="col s10 m6">
+          <ul class="collapsible popout" data-collapsible="accordion">
+            <li>
+              <div class="collapsible-header"><i class="material-icons">filter_drama</i>First</div>
+              <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+            </li>
+            <li>
+              <div class="collapsible-header"><i class="material-icons">place</i>Second</div>
+              <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+            </li>
+            <li>
+              <div class="collapsible-header"><i class="material-icons">whatshot</i>Third</div>
+              <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+            </li>
+          </ul>
+        </div>
 
 
       </div>
@@ -115,17 +139,17 @@
     <br><br>
   </div>
 
-  <footer class="page-footer blue-grey">
+  <footer class="page-footer blue darken-1">
     <div class="container">
       <div class="row">
         <div class="col l6 s12">
           <h5 class="white-text">CGames</h5>
-          <p class="grey-text text-lighten-4">Bio goes here</p>
+          <li><a class="grey-text text-lighten-1" href="https://github.com/briankarUB/CGames">GitHub: CGames</a></li>
 
 
         </div>
         <div class="col l3 s12">
-          <h5 class="white-text">Settings</h5>
+          <h5 class="white-text">Connect</h5>
           <ul>
             <li><a class="white-text" href="#!">Link 1</a></li>
             <li><a class="white-text" href="#!">Link 2</a></li>
@@ -134,9 +158,9 @@
           </ul>
         </div>
         <div class="col l3 s12">
-          <h5 class="white-text">Connect</h5>
+          <h5 class="white-text">Questions?</h5>
           <ul>
-            <li><a class="white-text" href="#!">Link 1</a></li>
+            <li><a class="white-text" href="https://gitter.im/CGames_CSE442/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge!">Chat With Us On Gitter</a></li>
             <li><a class="white-text" href="#!">Link 2</a></li>
             <li><a class="white-text" href="#!">Link 3</a></li>
             <li><a class="white-text" href="#!">Link 4</a></li>
