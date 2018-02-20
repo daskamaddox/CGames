@@ -27,7 +27,16 @@
         </li>
       </ul>
       <ul id="nav-mobile" class="side-nav">
-        <li><a href="/profile">Profile</a></li>
+        <li><a href="/profile">Profile
+          <style>
+          img {
+            border-radius: 50%
+          }
+          </style>
+          <img src= {{ photo}} width="30" alt="Avatar" align='center'></img></a>
+        </li>
+        <li><a href="/login"> Switch User </a></li>
+        <li><a href="/"> Logout </a></li>
       </ul>
       <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
     </div>
