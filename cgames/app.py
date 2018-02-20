@@ -101,8 +101,12 @@ def signin():
 
     for i in range(0, len(n), 2):
         d[n[i]] = n[i+1]
-
-    return render_template('profile.html', vname=d['name'], photo=d['picture'])
+    return render_template('profile.html',
+                           vname=d['name'],
+                           photo=d['picture'],
+                           email=d['email'],
+                           vid=d['id']
+                           )
 
 
 '''
