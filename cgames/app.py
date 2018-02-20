@@ -121,6 +121,18 @@ def login():
 
 
 '''
+    the logout function can set a new user
+'''
+
+
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)
+    flash('You were logged out.')
+    return redirect(url_for('welcome'))
+
+
+'''
     authorize handles the redirect of the google oath
 '''
 
