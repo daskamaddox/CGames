@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath app cgames.app
+web: sh ./cgames/run.sh
