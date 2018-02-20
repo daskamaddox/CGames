@@ -25,23 +25,11 @@ import oauth2
 '''
 
 
-_etree = None
-
-
 def get_etree():
     """Return an elementtree implementation.  Prefers lxml"""
     global _etree
     if _etree is None:
-        try:
-            from lxml import etree as _etree
-        except ImportError:
-            try:
-                from xml.etree import cElementTree as _etree
-            except ImportError:
-                try:
-                    from xml.etree import ElementTree as _etree
-                except ImportError:
-                    raise TypeError('lxml or etree not found')
+        raise TypeError('lxml or etree not found')
     return _etree
 
 
@@ -301,13 +289,14 @@ class OAuthRemoteApp(object):
     def generate_request_token(self, callback=None):
         if callback is not None:
             callback = urljoin(request.url, callback)
-        resp, content = self._client.request_new_token(
-            self.expand_url(self.request_token_url), callback,
-                self.request_token_params)
+        url = self.expand_url(self.request_token_url)
+        resp, conten = self._client.request_new_token(url, callback,
+                                                      self.request_token_params
+                                                      )
         if not self.status_okay(resp):
             raise OAuthException('Failed to generate request token',
                                  type='token_generation_failed')
-        data = parse_response(resp, content)
+        data = parse_response(resp, conten)
         if data is None:
             raise OAuthException('Invalid token response from ' + self.name,
                                  type='token_generation_failed')
@@ -403,12 +392,13 @@ class OAuthRemoteApp(object):
         }
         remote_args.update(self.access_token_params)
         if self.access_token_method == 'POST':
-            resp, content = self._client.request(self.expand_url(self.access_token_url),
+            expand = self.expand_url(self.access_token_url)
+            resp, content = self._client.request(expand,
                                                  self.access_token_method,
                                                  url_encode(remote_args))
         elif self.access_token_method == 'GET':
-            url = add_query(self.expand_url(self.access_token_url), remote_args)
-            resp, content = self._client.request(url, self.access_token_method)
+            ur = add_query(self.expand_url(self.access_token_url), remote_args)
+            resp, content = self._client.request(ur, self.access_token_method)
         else:
             raise OAuthException('Unsupported access_token_method: ' +
                                  self.access_token_method)
