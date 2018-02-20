@@ -58,7 +58,7 @@ def save(user):
 
 @app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template('home.html')
 
 
 '''
@@ -69,7 +69,7 @@ def index():
 '''
 
 
-@app.route('/signin')
+@app.route('/Home')
 def signin():
     access_token = session.get('access_token')
     if access_token is None:
@@ -101,7 +101,7 @@ def signin():
 
     for i in range(0, len(n), 2):
         d[n[i]] = n[i+1]
-    return render_template('profile.html',
+    return render_template('userhome.html',
                            vname=d['name'],
                            photo=d['picture'],
                            email=d['email'],
