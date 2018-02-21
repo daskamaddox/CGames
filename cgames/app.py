@@ -1,4 +1,5 @@
 from flask import Flask, redirect, url_for, session, render_template
+import json
 try:
     from cgames.fo import OAuth
 except Exception as e:
@@ -90,17 +91,8 @@ def signin():
             return redirect(url_for('login'))
         return res.read()
     user = (res.read())
-    n = []
-    ulist = user.decode('utf-8').split(',')
-    for item in ulist:
-        new = item.split(':', 1)
-        for i in range(len(new)):
-            n.append(new[i][new[i].find('"')+1:
-                     new[i].find('"', new[i].find('"')+1)])
-    d = {}
 
-    for i in range(0, len(n), 2):
-        d[n[i]] = n[i+1]
+    d =json.loads(user.decode('UTF-8'))
     return render_template('userhome.html',
                            vname=d['name'],
                            photo=d['picture'],
