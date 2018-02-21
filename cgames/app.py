@@ -92,7 +92,7 @@ def signin():
         return res.read()
     user = (res.read())
 
-    d =json.loads(user.decode('UTF-8'))
+    d = json.loads(user.decode('UTF-8'))
     return render_template('userhome.html',
                            vname=d['name'],
                            photo=d['picture'],
