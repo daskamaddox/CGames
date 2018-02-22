@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, session, render_template
+from flask import Flask, redirect, url_for, session, render_template, jsonify
 import json
 try:
     from cgames.fo import OAuth
@@ -76,23 +76,11 @@ def signin():
     if access_token is None:
         return redirect(url_for('login'))
 
-    access_token = access_token[0]
-    import urllib.request
-    from urllib.error import URLError
-    headers = {'Authorization': 'OAuth '+access_token}
-    url = 'https://www.googleapis.com/oauth2/v1/userinfo'
-    req = urllib.request.Request(url, None, headers)
-    try:
-        res = urllib.request.urlopen(req)
-    except URLError as e:
-        if e.code == 401:
-            # Unauthorized - bad token
-            session.pop('access_token', None)
-            return redirect(url_for('login'))
-        return res.read()
-    user = (res.read())
+    d = get_user_info(access_token)
 
-    d = json.loads(user.decode('UTF-8'))
+    if not d:
+        return redirect(url_for('login'))
+
     return render_template('userhome.html',
                            vname=d['name'],
                            photo=d['picture'],
@@ -136,6 +124,27 @@ def authorized(resp):
     return redirect(url_for('index'))
 
 
+def get_user_info(access_token):
+    access_token = access_token[0]
+    import urllib.request
+    from urllib.error import URLError
+    headers = {'Authorization': 'OAuth '+access_token}
+    url = 'https://www.googleapis.com/oauth2/v1/userinfo'
+    req = urllib.request.Request(url, None, headers)
+    try:
+        res = urllib.request.urlopen(req)
+    except URLError as e:
+        print(e)
+        if e.code == 401:
+            # Unauthorized - bad token
+            session.pop('access_token', None)
+            return None
+        return res.read()
+    user = (res.read())
+
+    return json.loads(user.decode('UTF-8'))
+
+
 '''
     get_access_token returns the access_token from the flask session
 '''
@@ -144,6 +153,17 @@ def authorized(resp):
 @google.tokengetter
 def get_access_token():
     return session.get('access_token')
+
+
+@app.route('/profile')
+def profile():
+    token = get_access_token()
+    if not token:
+        return redirect(url_for('login'))
+
+    info = get_user_info(token)
+
+    return jsonify(info)
 
 
 '''
