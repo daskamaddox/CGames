@@ -57,6 +57,9 @@ def index():
     then a template profile page is shown profile.html with a name and image
 '''
 
+@app.route('/Assignments')
+def assignments():
+    return render_template('assignments.html')
 
 @app.route('/Home')
 def signin():
@@ -76,6 +79,7 @@ def signin():
                            email=d['email'],
                            vid=d['id']
                            )
+
 
 
 '''
