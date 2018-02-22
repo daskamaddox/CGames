@@ -1,9 +1,6 @@
-from flask import Flask, redirect, url_for, session, render_template, jsonify
-import json
-try:
-    from cgames.fo import OAuth
-except Exception as e:
-    from fo import OAuth
+from flask import Flask, redirect, url_for, render_template, jsonify
+from flask_dance.contrib.google import make_google_blueprint, google
+
 try:
     import cgames.config as config
 except Exception as e:
@@ -12,6 +9,9 @@ except Exception as e:
     connecting to google OAuth
     source tutorial: https://pythonspot.com/login-to-flask-app-with-google
 '''
+
+import os
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'  # FIXME
 
 GOOGLE_CLIENT_ID = config.GOOGLE_CLIENT_ID
 GOOGLE_CLIENT_SECRET = config.GOOGLE_CLIENT_SECRET
@@ -22,25 +22,13 @@ DEBUG = True
 app = Flask(__name__)
 app.debug = DEBUG
 app.secret_key = SECRET_KEY
-oauth = OAuth()
 
-base_url = 'https://www.google.com/accounts/'
-authorize_url = 'https://accounts.google.com/o/oauth2/auth'
-request_token = {'scope': 'https://www.googleapis.com/auth/userinfo.email',
-                 'response_type': 'code'}
-access_token_url = 'https://accounts.google.com/o/oauth2/token'
-access_token_params = {'grant_type': 'authorization_code'}
-
-google = oauth.remote_app('google',
-                          base_url=base_url,
-                          authorize_url=authorize_url,
-                          request_token_url=None,
-                          request_token_params=request_token,
-                          access_token_url=access_token_url,
-                          access_token_method='POST',
-                          access_token_params=access_token_params,
-                          consumer_key=GOOGLE_CLIENT_ID,
-                          consumer_secret=GOOGLE_CLIENT_SECRET)
+blueprint = make_google_blueprint(
+    client_id=GOOGLE_CLIENT_ID,
+    client_secret=GOOGLE_CLIENT_SECRET,
+    scope=['email', 'profile']
+)
+app.register_blueprint(blueprint, url_prefix='/login')
 
 '''
     the function save is the template for saving the user, a table will have to
@@ -72,14 +60,15 @@ def index():
 
 @app.route('/Home')
 def signin():
-    access_token = session.get('access_token')
-    if access_token is None:
-        return redirect(url_for('login'))
+    if not google.authorized:
+        return redirect(url_for('google.login'))
 
-    d = get_user_info(access_token)
+    # print(help(google.close))
 
-    if not d:
-        return redirect(url_for('login'))
+    resp = google.get('/oauth2/v2/userinfo')
+    assert resp.ok, resp.text
+
+    d = resp.json()
 
     return render_template('userhome.html',
                            vname=d['name'],
@@ -90,86 +79,19 @@ def signin():
 
 
 '''
-    the login function runs the google oath
+    main runs the app
 '''
-
-
-@app.route('/login')
-def login():
-    callback = url_for('authorized', _external=True)
-    return google.authorize(callback=callback),
-
-
-'''
-    the logout function can set a new user
-'''
-
-
-@app.route('/logout')
-def logout():
-    session.pop('logged_in', None)
-    return redirect(url_for('welcome'))
-
-
-'''
-    authorize handles the redirect of the google oath
-'''
-
-
-@app.route(REDIRECT_URI)
-@google.authorized_handler
-def authorized(resp):
-    access_token = resp['access_token']
-    session['access_token'] = access_token, ''
-    return redirect(url_for('index'))
-
-
-def get_user_info(access_token):
-    access_token = access_token[0]
-    import urllib.request
-    from urllib.error import URLError
-    headers = {'Authorization': 'OAuth '+access_token}
-    url = 'https://www.googleapis.com/oauth2/v1/userinfo'
-    req = urllib.request.Request(url, None, headers)
-    try:
-        res = urllib.request.urlopen(req)
-    except URLError as e:
-        print(e)
-        if e.code == 401:
-            # Unauthorized - bad token
-            session.pop('access_token', None)
-            return None
-        return res.read()
-    user = (res.read())
-
-    return json.loads(user.decode('UTF-8'))
-
-
-'''
-    get_access_token returns the access_token from the flask session
-'''
-
-
-@google.tokengetter
-def get_access_token():
-    return session.get('access_token')
 
 
 @app.route('/profile')
 def profile():
-    token = get_access_token()
-    if not token:
-        return redirect(url_for('login'))
+    if not google.authorized:
+        return redirect(url_for('google.login'))
 
-    info = get_user_info(token)
+    resp = google.get('/oauth2/v2/userinfo')
+    assert resp.ok, resp.text
 
-    return jsonify(info)
-
-
-'''
-    main runs the app
-'''
-
+    return jsonify(resp.json())
 
 def main():
     app.run()
