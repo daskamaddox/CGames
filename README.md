@@ -33,3 +33,13 @@ $ git clone https://github.com/briankarUB/CGames.git
 $ cd CGames
 $ python setup.py validate
 ```
+
+## Running
+Follow the above procedure to clone and test the project. Then, modify 
+`config.py` to include your own Google API authentication info, which you
+can get from https://console.cloud.google.com.
+
+Finally, run the project using the following command:
+```
+python -m cgames.run
+```
