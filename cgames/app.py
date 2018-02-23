@@ -11,6 +11,7 @@ except Exception as e:
 '''
 
 import os
+
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'  # FIXME
 
 GOOGLE_CLIENT_ID = config.GOOGLE_CLIENT_ID
@@ -58,6 +59,11 @@ def index():
 '''
 
 
+@app.route('/Assignments')
+def assignments():
+    return render_template('assignments.html')
+
+
 @app.route('/Home')
 def signin():
     if not google.authorized:
@@ -79,6 +85,8 @@ def signin():
 
 
 '''
+
+
     main runs the app
 '''
 
