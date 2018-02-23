@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, render_template
+from flask import Flask, redirect, url_for, render_template, jsonify
 from flask_dance.contrib.google import make_google_blueprint, google
 
 try:
@@ -85,6 +85,17 @@ def signin():
 '''
     main runs the app
 '''
+
+
+@app.route('/profile')
+def profile():
+    if not google.authorized:
+        return redirect(url_for('google.login'))
+
+    resp = google.get('/oauth2/v2/userinfo')
+    assert resp.ok, resp.text
+
+    return jsonify(resp.json())
 
 
 def main():
