@@ -11,6 +11,7 @@ except Exception as e:
 '''
 
 import os
+
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'  # FIXME
 
 GOOGLE_CLIENT_ID = config.GOOGLE_CLIENT_ID
@@ -57,9 +58,11 @@ def index():
     then a template profile page is shown profile.html with a name and image
 '''
 
+
 @app.route('/Assignments')
 def assignments():
     return render_template('assignments.html')
+
 
 @app.route('/Home')
 def signin():
@@ -81,8 +84,9 @@ def signin():
                            )
 
 
-
 '''
+
+
     main runs the app
 '''
 
