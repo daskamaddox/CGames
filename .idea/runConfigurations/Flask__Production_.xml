@@ -5,9 +5,10 @@
     <envs>
       <env name="FLASK_APP" value="cgames/app.py" />
       <env name="FLASK_DEBUG" value="0" />
-      <env name="GOOGLE_OAUTH2_CLIENT_SECRET" value="" />
       <env name="PYTHONUNBUFFERED" value="1" />
-      <env name="GOOGLE_OAUTH2_CLIENT_ID" value="" />
+      <env name="OAUTHLIB_INSECURE_TRANSPORT" value="1" />
+      <env name="GOOGLE_OAUTH_CLIENT_ID" value="" />
+      <env name="GOOGLE_OAUTH_CLIENT_SECRET" value="" />
     </envs>
     <option name="SDK_HOME" value="" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
