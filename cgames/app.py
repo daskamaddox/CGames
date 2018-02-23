@@ -102,6 +102,16 @@ def profile():
     return jsonify(resp.json())
 
 
+@app.route('/Leaderboard')
+def leaderboard():
+    return render_template('leaderboard.html')
+
+
+"""
+    Leaderboard Page
+"""
+
+
 def main():
     app.run()
 
