@@ -36,8 +36,7 @@ setup(
         'pytest-runner'
     ],
     tests_require=[
-        'pytest',
-        'pytest-cov'
+        'pytest'
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',
